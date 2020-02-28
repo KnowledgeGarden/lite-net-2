@@ -1,0 +1,11 @@
+{"text":"<a href=\"/topic/foo\">Foo</a> causes <a href=\"/topic/bar\">Bar</a>","subj":"Foo","pred":"causes","obj":"Bar","date":{"$$date":1582755161327},"url":"http://demo1.com/","notes":"Talking about causality","id":"290432fa-2e6f-4a46-abb9-1861cd17314d","_id":"7VCvUgy0zf7sie1A"}
+{"id":"dde110a5-5e67-4889-bd82-f6667b4b00ba","text":"This one's the charm!!!","date":{"$$date":1582852544235},"_id":"CudgDrRmHIS6HOE0"}
+{"id":"962c1105-21bb-4e94-840f-30251412682e","text":"Yet another one with a URL","date":{"$$date":1582858060523},"urllist":["https://www.topicquests.org/"],"_id":"FCCS4yK0XPUG62Qn"}
+{"id":"11359a6d-dcf2-403f-97a1-296d7bdcf12a","text":"Once more for the gipper.","date":{"$$date":1582852170060},"_id":"HqFU4PimqRcu1MAq"}
+{"id":"6d2fdfaa-0356-424b-bd20-6753780864bd","text":"This would be my first AIR","date":{"$$date":1582851739525},"_id":"LQgyuN22vr6diVKr"}
+{"id":"70e988f0-f6ba-4544-a58f-43e8cd3a3292","text":"Now is a good time for all good men to do something useful.","date":{"$$date":1582852012069},"_id":"NYjBLWYReQZbA1xo"}
+{"id":"8a6e8f5a-7116-47f7-9385-ed18d790fb59","text":"Going bonkers now.","date":{"$$date":1582852384912},"_id":"Sc4DmdxGoaCL3yGY"}
+{"id":"a87fc62d-8b1a-4f13-b584-bfddee7d416b","text":"Yet another one, this time with a url","date":{"$$date":1582852574151},"urllist":["https://www.topicquests.org/"],"_id":"ThM6teDb16IiMq6T"}
+{"id":"068f48fb-4751-417e-8dd8-187ec1425221","text":"Here's another one with a URL","date":{"$$date":1582857957062},"urllist":["https://www.topicquests.org/"],"_id":"VVnrM4QMqsKcZYMu"}
+{"text":"<a href=\"/topic/foo\">Foo</a> isA <a href=\"/topic/blah\">Blah</a>","subj":"Foo","pred":"isA","obj":"Blah","date":{"$$date":1582755430899},"url":"http://demo1.com/","notes":"Learning taxonomy","id":"cb51650d-5aa6-41e1-95d9-15fb4e87292e","_id":"z9GjGFDp0QjNgayc"}
+{"id":"d76e7693-96e1-416c-bdab-14dceeb3b4bf","text":"Yet another one with a URL Again!","date":{"$$date":1582858124072},"urllist":["https://www.topicquests.org/"],"_id":"LIukLebKgYWTKjay"}
