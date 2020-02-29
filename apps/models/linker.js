@@ -64,33 +64,38 @@ Linker = function() {
    * @param callback {data, topiclist}
    */
   self.resolveWikiLinks = function(text, callback) {
+    console.info('LINKER', text);
     var topiclist = []; // topic is a json object with label and slug
     var result = "";
     var begin = text.indexOf("[[");
+    if (begin > -1) {
+      result = text.substring(0, begin)+" ";
+    }
     var end = 0;
     var term;
     var slug;
     var jsonT;
     while (begin > -1) {
-      // add unused text to result
-      result = text.substring(begin)+" ";
       begin += 2;
       end = text.indexOf("]]", begin);
       term = text.substring(begin, end).trim();
+      console.info('LINKER-1', begin, end, term, text);
       slug = slugUtil.toSlug(term);
       // add href to result
-      result += self.getHref(term)+" ";
+      result += self.getHref(term, slug)+" ";
       jsonT = {};
       jsonT.label = term;
       jsonT.slug = slug;
       topiclist.push(jsonT);
-      begin = term.indexOf("[[");
-      if (begin === -1 && (end +2) < text.length()) {
+      end += 2;
+      begin = text.indexOf("[[", end);
+      console.info('LINKER-2', begin, end, term, text);
+      if (begin === -1 && (end) < text.length) {
         //add remainder, if any
-        result += text.substring(end+2);
+        result += text.substring(end);
       } else {
         //add gap from last end+2
-        result += text.substring((end+2), begin)+" ";
+        result += text.substring((end), begin)+" ";
       }
     }
     if (result === "") {
@@ -99,12 +104,23 @@ Linker = function() {
     return callback(result.trim(), topiclist);
   };
 
-  self.setHrefs = function(subject, sSlug, object, oSlug, predicate) {
+  /**
+   * Craft a triple for viewing as 3 hrefs
+   * @param subject
+   * @param sSlug
+   * @param object
+   * @param oSlug
+   * @param predicate
+   * @param pSlug
+   * @return
+   */
+  self.setHrefs = function(subject, sSlug, object, oSlug, predicate, pSlug) {
     var result = "";
     var sHref = "<a href=\"/topic/"+sSlug+"\">"+subject+"</a>";
     var oHref = "<a href=\"/topic/"+oSlug+"\">"+object+"</a>";
+    var pHref = "<a href=\"/topic/"+pSlug+"\">"+predicate+"</a>";
     result += sHref+" ";
-    result += predicate;
+    result += pHref+" ";
     result += " "+oHref;
     return result;
   };

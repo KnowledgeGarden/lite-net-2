@@ -22,7 +22,8 @@ Database = function() {
   };
 
   self.list = function(callback) {
-    db.find({}, function(err, data) {
+    //db.find({}, function(err, data) {
+    db.find({}).sort({ date: -1 }).exec(function (err, data) {
       console.info('NoteList', err, data);
       return callback(err, data);
     });

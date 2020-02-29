@@ -3,12 +3,16 @@
 <p>
   {{date}}<br/>
   {{{text}}}<br/>
-  <hr>
-  {{#each urllist}}
-    <a href="{{this}}">{{this}}</a><br/>
-  {{/each}}
-  {{#if notes}}
+  {{#if urllist}}
     <hr>
-    {{notes}}
+    {{#each urllist}}
+      <a href="{{this}}">{{this}}</a><br/>
+    {{/each}}
+  {{/if}}
+  {{#if bodylist}}
+    <hr>
+    {{#each bodylist}}
+      {{{this}}}<br/>
+    {{/each}}
   {{/if}}
 </p>

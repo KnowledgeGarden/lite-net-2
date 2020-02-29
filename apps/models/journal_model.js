@@ -55,7 +55,7 @@ JournalModel = function() {
     var objectSlug = slugUtil.toSlug(object);
     var predicateSlug = subjectSlug+slugUtil.toSlug(predicate)+objectSlug;
     var triple = subject+" "+predicate+" "+object;
-    json.text = linker.setHrefs(subject, subjectSlug, object, objectSlug, predicate);
+    json.text = linker.setHrefs(subject, subjectSlug, object, objectSlug, predicate, predicateSlug);
     json.subj = subject;
     json.pred = predicate;
     json.obj = object;
@@ -65,17 +65,20 @@ JournalModel = function() {
       ul.push(url);
       json.urllist = ul;
     }
+    json.bodylist = [];
     if (notes) {
-      var bl = [];
-      bl.push(notes)
-      json.bodylist = bl;
+      //TODO process notes for wikilinks
+      json.bodylist.push(notes);
     }
     json.id = uid;
     //process the topics
-    TopicModel.processTopic(subject, subjectSlug, triple, uid);
-    TopicModel.processTopic(object, objectSlug, triple, uid);
+    TopicModel.processTopic(subject, subjectSlug, url, triple, uid);
+    TopicModel.processTopic(object, objectSlug, url, triple, uid);
     var predlabel = subject+" "+predicate+" "+object;
-    TopicModel.processTopic(predLabel, predicateSlug, triple, uid);
+    TopicModel.processPredicate(predlabel, predicateSlug, 
+                                subject, subjectSlug,
+                                object, objectSlug,
+                                url, triple, uid);
     // persist the journal entry
     journalDB.put(json, function(err, dat) {
       console.info("ProcessTriple", err, dat);
@@ -128,14 +131,24 @@ JournalModel = function() {
    */
   self.updateTopic = function(id, url, body, callback) {
     topicDB.addBodyText(id, body, function(err) {
-      return callback(err);
+      if (url) {
+        topicDB.addURL(id, url, function(erx) {
+          return callback(erx);
+        });
+      } else {
+        return callback(err);
+      }
     });
   };
 
   
-  self.processTopics = function(topiclist, text, id) {
+  self.processTopics = function(topiclist, url, text, id) {
+    console.info('ProcessTopics', topiclist, id, text);
     var json;
-    for (json in topiclist) {
+    var i;
+    for (i in topiclist) {
+      json = topiclist[i];
+      console.info('PT-1', json);
       TopicModel.processTopic(json.label, 
                               json.slug,
                               text,
@@ -165,11 +178,14 @@ JournalModel = function() {
       // we now have an AIR ready to persist
       // and possible a list of topics to process
       journalDB.put(json, function(err, dat) {
-        console.info("newAIR", err, dat, topiclist);
-        if (topiclist.lengh > 0) {
-          self.processTopics(topiclist, body, uid);
-          return callback(errx, dat);
+        var len = topiclist.length;
+        console.info("newAIR", err, dat, len, topiclist);
+        if (len > 0) {
+          console.info("newAir-1");
+          self.processTopics(topiclist, url, body, uid);
+          return callback(err, dat);
         } else {
+          console.info('newAir-2');
           return callback(err, dat);
         }
       });

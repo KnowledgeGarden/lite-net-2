@@ -1,21 +1,34 @@
 <h1><a href="/">{{title}}</a></h1>
-<h2>Topic: {{label}}</h2>
-<hr>
+{{#if source}}
+    <h2>Relation: {{label}}</h2>
+{{else}}
+    <h2>Topic: {{label}}</h2>
+{{/if}}
 {{> air_form}}
 <hr>
-<h3>Body</h3>
-<div style="overflow-y: auto; height:200px;">
+{{#if source}}
+    <h3>Source Topic: {{{source}}}</h3>
+    <h3>Target Topic: {{{target}}}</h3>
+{{/if}}
+{{#if bodylist}}
+    <hr>
+    <h3>Body</h3>
+    <div style="overflow-y: auto; height:200px;">
     {{#each bodylist}}
-        <p>
-        {{{this}}}
-        </p><br/>
+            <p>
+            {{{this}}}
+            </p><br/>
+        {{/each}}
+    </div>
+{{/if}}
+{{#if urllist}}
+<h3>Resources</h3>
+    {{#each urllist}}
+        <a href="{{this}}">{{this}}</a><br/>
     {{/each}}
-</div>
-{{#each urllist}}
-    <a href="{{this}}">{{this}}</a><br/>
-{{/each}}
+{{/if}}
 <h3>Backlinks</h3>
-<div style="overflow-y: auto; height:300px;">
+<div style="overflow-y: auto; height:200px;">
    
     {{#each backlinks}}
         <li>{{{this}}}</li>

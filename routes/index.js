@@ -47,7 +47,7 @@ router.get('/:id', function(req, res, next) {
   return res.render('index', data);
 });
 
-router.post('/posttriple', function(req, res, next) {
+router.post('/postAtriple', function(req, res, next) {
   var subject = req.body.subject;
   var predicate = req.body.predicate;
   var object = req.body.object;
@@ -56,12 +56,12 @@ router.post('/posttriple', function(req, res, next) {
   console.info('PostTriple', subject, predicate, object, url, notes);
   
   JournalModel.processTriple(subject, predicate, object, url, notes, function(err, dat) {
-    JournalModel.list(function(err, noteList) {
-      var data = {};
-      data.title = config.banner;
-      data.noteList = noteList;
-      return res.render('index', data);
-    });  
+    //JournalModel.list(function(err, noteList) {
+    //  var data = {};
+    //  data.title = config.banner;
+    //  data.noteList = noteList;
+      return res.redirect('/');
+    //});  
   });
 });
 
@@ -84,7 +84,7 @@ router.post('/posttopic', function(req, res, next) {
       return res.redirect('/journal/'+data.id);
     });
   } else { // NOTE ignoring parentId for now
-    JournalModel.updateTopic(id, body, function(err) {
+    JournalModel.updateTopic(id, url, body, function(err) {
       return res.redirect('/topic/'+id);
     });
   }
