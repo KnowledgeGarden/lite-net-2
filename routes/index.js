@@ -79,14 +79,17 @@ router.post('/posttopic', function(req, res, next) {
   var parentId = req.body.parentid;
   var url = req.body.url;
   console.info("PostTopic", id, parentId, url, body);
-  if (!id && !parentId) {
+  if (!id && !parentId && body) {
     JournalModel.newAIR(body, url, function(err, data) {
       return res.redirect('/journal/'+data.id);
     });
-  } else { // NOTE ignoring parentId for now
+  } else if (body || url) { // NOTE ignoring parentId for now
     JournalModel.updateTopic(id, url, body, function(err) {
       return res.redirect('/topic/'+id);
     });
+  } else {
+    //bad post - for now
+    return res.redirect('/');
   }
 });
 
@@ -95,9 +98,10 @@ router.get('/topic/:id', function(req, res, next) {
   console.info("GetTopic", id);
   JournalModel.getTopic(id, function(err, data) {
     console.info("GetTopic-2", data);
-    data.title = config.banner;
-    data.id = id;
-    return res.render('topicview', data);
+    var json = data;
+    json.title = config.banner;
+    json.jsonSource = JSON.stringify(data);
+    return res.render('topicview', json);
   });
 });
 

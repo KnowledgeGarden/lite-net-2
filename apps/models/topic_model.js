@@ -6,6 +6,64 @@ TopicModel = function() {
   var self = this;
 
     /**
+   * Add another AIR (addressable information resource) or URL
+   * to a topic identified by <code>id</code>
+   * @param id 
+   * @param body the AIR
+   * @param url optional
+   * @param callback { err }
+   */
+  self.updateTopic = function(id, url, body, callback) {
+    console.info('UpdateTopic', id, url, body);
+    //fetch the topic
+    topicDB.get(id, function(err, data) {
+      console.info('UpdateTopic-1', data);
+      //update the topic using treating arrays as sets (no duplicates)
+      var somelist;
+      var madeChanges = false;
+      if (url) {
+        somelist = data.urllist;
+        if (!somelist) {
+          somelist = [];
+          somelist.push(url);
+          madeChanges = true;
+        } else if (!somelist.includes(url)) {
+          madeChanges = true;
+          somelist.push(url);
+        }
+        data.urllist = somelist;
+      }
+      if (body) {
+        somelist = data.bodylist;
+        if (!somelist) {
+          somelist = [];
+          somelist.push(body);
+          madeChanges = true;
+        }
+        else if (!somelist.includes(body)) {
+          somelist.push(body);
+          madeChanges = true;
+        }
+        data.bodylist = somelist;
+      }
+      if (madeChanges) {
+        console.info('UpdateTopic-3', data);
+        //delete the old one
+        topicDB.delete(data._id, function(err, numRemoved) {
+          console.info('RemTopic', id, err, numRemoved);
+          // insert the new one
+          topicDB.put(data, function(err, dat) {
+            console.info('UpdateTopic-4', err, dat);
+            return callback(err);
+          });
+        });
+      } else {
+        return callback(err);
+      }
+    });
+  };
+
+  /**
    * Process a term which is a topic
    *  either make a new node from that term if not exists
    *  else add backlink to it with the content and its id
@@ -17,14 +75,16 @@ TopicModel = function() {
    * 
    */
   self.processTopic = function(term, slug, url, content, id) {
-    console.info("ProcessTopic", term, slug);
+    console.info("ProcessTopic", term, slug, url, id);
     topicDB.get(slug, function(err, data) {
       //backlink to the journal entry
       var bl ="<a href=\"/journal/"+id+"\">"+content+"</a>";
       console.info('ProcessTopic-1', err, data);
       if (data) {
-        topicDB.addBacklink(slug, bl, function(err) {
-          console.info("ABL", err);
+        self.updateTopic(slug, url, content, function(err) {
+          topicDB.addBacklink(slug, bl, function(err) {
+            console.info("ABL", err);
+          });
         });
       } else {
         var json = {};
@@ -61,14 +121,16 @@ TopicModel = function() {
                                    object, objectSlug,
                                    url,
                                    content, id) {
-    console.info("ProcessPredicate", predicate, predicateSlug);
+    console.info("ProcessPredicate", predicate, predicateSlug, url, id);
     topicDB.get(predicateSlug, function(err, data) {
       //backlink to the journal entry
       var bl ="<a href=\"/journal/"+id+"\">"+content+"</a>";
       console.info('ProcessPredicate-1', err, data);
       if (data) {
-        topicDB.addBacklink(predicateSlug, bl, function(err) {
-          console.info("BBL", err);
+        self.updateTopic(predicateSlug, url, content, function(err) {
+          topicDB.addBacklink(predicateSlug, bl, function(err) {
+            console.info("BBL", err);
+          });
         });
       } else {
         var json = {};

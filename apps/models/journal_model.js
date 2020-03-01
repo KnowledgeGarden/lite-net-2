@@ -10,6 +10,10 @@
     bodylist: list of text objects, each of which becomes an AIR journal entry
        - has been processed for wikilinks and other items
     urllist: list of URLs associated with this topic
+    sourceId: relations only
+    targetId: relations only
+    source: href to source (subject) relations only
+    target: href to target (object) relations only
   }
 
   Journal Entry Structure
@@ -122,7 +126,7 @@ JournalModel = function() {
   };
 
   /**
-   * Add another AIR (addressable information resource)
+   * Add another AIR (addressable information resource) or URL
    * to a topic identified by <code>id</code>
    * @param id 
    * @param body the AIR
@@ -130,14 +134,9 @@ JournalModel = function() {
    * @param callback { err }
    */
   self.updateTopic = function(id, url, body, callback) {
-    topicDB.addBodyText(id, body, function(err) {
-      if (url) {
-        topicDB.addURL(id, url, function(erx) {
-          return callback(erx);
-        });
-      } else {
-        return callback(err);
-      }
+    
+    topicDB.updateTopic(id, url, body, function(err) {
+      return callback(err);
     });
   };
 
@@ -151,6 +150,7 @@ JournalModel = function() {
       console.info('PT-1', json);
       TopicModel.processTopic(json.label, 
                               json.slug,
+                              url,
                               text,
                               id
                               );

@@ -7,6 +7,11 @@ Database = function() {
   console.info('Database '+db);
   var self = this;
 
+  /**
+   * Insert a topic
+   * @param jsonDoc the topic
+   * @param callback { err, newDoc }
+   */
   self.put = function(jsonDoc, callback) {
     db.insert(jsonDoc, function (err, newDoc) {
       return callback(err, newDoc);
@@ -24,18 +29,17 @@ Database = function() {
     });
   };
 
-  self.addBodyText = function(id, bodytext, callback) {
-    db.update({ id: id }, { $push: { bodylist: bodytext } }, {}, function (err) {
-      return callback(err);
+  /**
+   * Remove a topic identified by <code>_id</code>
+   * @param _id 
+   * @param callback { err, numRemoved }
+   */
+  self.delete = function(_id, callback) {
+    db.remove({ _id: _id }, {}, function (err, numRemoved) {
+      return callback(err, numRemoved);
     });
   };
 
-  self.addURL = function(id, url, callback) {
-    db.update({ id: id }, { $push: { urllist: url } }, {}, function (err) {
-      return callback(err);
-    });
-  };
-  
   /**
    * @param id 
    * @param callback { err, data}
