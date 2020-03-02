@@ -56,11 +56,8 @@ router.post('/postAtriple', function(req, res, next) {
   console.info('PostTriple', subject, predicate, object, url, notes);
   
   JournalModel.processTriple(subject, predicate, object, url, notes, function(err, dat) {
-    //JournalModel.list(function(err, noteList) {
-    //  var data = {};
-    //  data.title = config.banner;
-    //  data.noteList = noteList;
-      return res.redirect('/');
+    console.log('BigTriple', dat);
+      return res.redirect('/journal/'+dat.id);
     //});  
   });
 });
